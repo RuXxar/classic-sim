@@ -1,0 +1,66 @@
+body {
+    background-color: #f0cfc4;
+}
+
+.container {
+    max-width: 100vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    transition: transform 2s;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.shape {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    outline: 1px solid black;
+    /* Slightly rounded corners for better aesthetics */
+}
+
+.blue {
+    background-color: blue;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+.red {
+    background-color: red;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yellow {
+    background-color: yellow;
+    border-radius: 0;
+    /* Optional: Remove if rounded squares are preferred */
+}
+
+.rotated180 {
+    transform: rotate(180deg);
+}
+
+/* Additional CSS to rotate or adjust lines based on link data attributes might be needed */
