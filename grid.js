@@ -1,145 +1,204 @@
-export function getAdjacentPositions(row, col, rows, cols, usedPositions) {
-    const positions = [];
-    if (row > 0 && !usedPositions.has(`${row - 1},${col}`)) positions.push([row - 1, col]);
-    if (row < rows - 1 && !usedPositions.has(`${row + 1},${col}`)) positions.push([row + 1, col]);
-    if (col > 0 && !usedPositions.has(`${row},${col - 1}`)) positions.push([row, col - 1]);
-    if (col < cols - 1 && !usedPositions.has(`${row},${col + 1}`)) positions.push([row, col + 1]);
-    return positions;
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function placeTrio(grid, row, col, rows, cols, usedPositions) {
-    let adjacents = getAdjacentPositions(row, col, rows, cols, usedPositions);
-    if (adjacents.length >= 2) {
-        shuffleArray(adjacents); // Randomizes the array of adjacent positions
-        const redPos = adjacents.pop();   // Selects one position for red
-        const yellowPos = adjacents.pop(); // Selects another position for yellow
-
-        // Place red and yellow in the selected positions
-        grid[row][col] = 'blue';
-        grid[redPos[0]][redPos[1]] = 'red';
-        grid[yellowPos[0]][yellowPos[1]] = 'yellow';
-
-        // Mark these positions as used
-        usedPositions.add(`${row},${col}`);
-        usedPositions.add(`${redPos[0]},${redPos[1]}`);
-        usedPositions.add(`${yellowPos[0]},${yellowPos[1]}`);
-
-        return true;
-    }
-    return false;
+function intToColor(num) {
+    return num == 1 ? 'red' : 'yellow';
 }
 
+function getPattern1() {
+    let grid = [
+        ['blue', null, 'blue', null],
+        [null, null, null, null],
+        [null, 'blue', null, 'blue']
+    ];
 
+    let color01 = getRandomInt(0, 1);
+    let color20 = getRandomInt(0, 1);
+    let color03 = getRandomInt(0, 1);
+    let color22 = getRandomInt(0, 1);
 
-export function generateValidGrid() {
+    grid[0][1] = intToColor(color01);
+    grid[1][0] = intToColor(color01 ^ 1);
+    grid[2][0] = intToColor(color20);
+    grid[1][1] = intToColor(color20 ^ 1);
+    grid[0][3] = intToColor(color03);
+    grid[1][2] = intToColor(color03 ^ 1);
+    grid[2][2] = intToColor(color22);
+    grid[1][3] = intToColor(color22 ^ 1);
+
+    return {
+        "grid": grid,
+        "solution": [
+            [[0, 0], [0, 1]], [[0, 0], [1, 0]],
+            [[2, 1], [1, 1]], [[2, 1], [2, 0]],
+            [[0, 2], [0, 3]], [[0, 2], [1, 2]],
+            [[2, 3], [1, 3]], [[2, 3], [2, 2]]
+        ]
+    };
+}
+
+function getPattern2() {
+    let grid = [
+        ['blue', null, null, 'blue'],
+        [null, null, null, null],
+        [null, 'blue', 'blue', null]
+    ];
+
+    let color01 = getRandomInt(0, 1);
+    let color20 = getRandomInt(0, 1);
+    let color02 = getRandomInt(0, 1);
+    let color23 = getRandomInt(0, 1);
+
+    grid[0][1] = intToColor(color01);
+    grid[1][0] = intToColor(color01 ^ 1);
+    grid[2][0] = intToColor(color20);
+    grid[1][1] = intToColor(color20 ^ 1);
+    grid[0][2] = intToColor(color02);
+    grid[1][3] = intToColor(color02 ^ 1);
+    grid[2][3] = intToColor(color23);
+    grid[1][2] = intToColor(color23 ^ 1);
+
+    return {
+        "grid": grid,
+        "solution": [
+            [[0, 0], [0, 1]], [[0, 0], [1, 0]],
+            [[2, 1], [1, 1]], [[2, 1], [2, 0]],
+            [[0, 3], [0, 2]], [[0, 3], [1, 3]],
+            [[2, 2], [1, 2]], [[2, 2], [2, 3]]
+        ]
+    };
+}
+
+function getPattern3() {
+    let grid = [
+        [null, 'blue', null, null],
+        ['blue', null, null, 'blue'],
+        [null, null, 'blue', null]
+    ];
+
+    let color20 = getRandomInt(0, 1);
+    let color00 = getRandomInt(0, 1);
+    let color03 = getRandomInt(0, 1);
+    let color23 = getRandomInt(0, 1);
+
+    grid[2][0] = intToColor(color20);
+    grid[0][2] = intToColor(color20 ^ 1);
+    grid[0][0] = intToColor(color00);
+    grid[1][1] = intToColor(color00 ^ 1);
+    grid[0][3] = intToColor(color03);
+    grid[2][1] = intToColor(color03 ^ 1);
+    grid[2][3] = intToColor(color23);
+    grid[1][2] = intToColor(color23 ^ 1);
+
+    let color20pair = color00 ^ color20 == 1 ? [0, 0] : [1, 1];
+    let color02pair = color00 ^ color20 == 1 ? [1, 1] : [0, 0];
+    let color03pair = color03 ^ color23 == 1 ? [2, 3] : [1, 2];
+    let color21pair = color03 ^ color23 == 1 ? [1, 2] : [2, 3];
+
+    return {
+        "grid": grid,
+        "solution": [
+            [[0, 1], [0, 2]], [[0, 1], color02pair],
+            [[1, 0], [2, 0]], [[1, 0], color20pair],
+            [[1, 3], [0, 3]], [[1, 3], color03pair],
+            [[2, 2], [2, 1]], [[2, 2], color21pair]
+        ]
+    };
+}
+
+function getPattern4() {
+    let grid = [
+        ['blue', null, null, null],
+        [null, null, 'blue', 'blue'],
+        [null, 'blue', null, null]
+    ];
+
+    let color01 = getRandomInt(0, 1);
+    let color03 = getRandomInt(0, 1);
+    let color20 = getRandomInt(0, 1);
+    let color22 = getRandomInt(0, 1);
+
+    grid[0][1] = intToColor(color01);
+    grid[1][0] = intToColor(color01 ^ 1);
+    grid[0][3] = intToColor(color03);
+    grid[2][3] = intToColor(color03 ^ 1);
+    grid[2][0] = intToColor(color20);
+    grid[0][2] = intToColor(color20 ^ 1);
+    grid[2][2] = intToColor(color22);
+    grid[1][1] = intToColor(color22 ^ 1);
+
+    let color20pair = color20 ^ color22 == 1 ? [2, 2] : [1, 1];
+    let color02pair = color20 ^ color22 == 1 ? [1, 1] : [2, 2];
+
+    return {
+        "grid": grid,
+        "solution": [
+            [[0, 0], [0, 1]], [[0, 0], [1, 0]],
+            [[2, 1], [2, 0]], [[2, 1], color20pair],
+            [[1, 2], [0, 2]], [[1, 2], color02pair],
+            [[1, 3], [0, 3]], [[1, 3], [2, 3]]
+        ]
+    };
+}
+
+function getRandomPattern() {
+    return [getPattern1, getPattern2, getPattern3, getPattern3, getPattern3, getPattern3, getPattern4, getPattern4][getRandomInt(0, 7)]();
+}
+
+function flipVert(someMap) {
     const rows = 3;
     const cols = 4;
-    let grid = Array.from({ length: rows }, () => new Array(cols).fill(null));
-    let attempts = 0;
-    const maxAttempts = 10000;
-
-    while (attempts < maxAttempts) {
-        // Reset grid and used positions on each attempt
-        grid.forEach(row => row.fill(null));
-        let usedPositions = new Set();  // To track positions of all trio members
-        let positions = [];
-
-        // Generate all grid positions
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                positions.push([row, col]);
-            }
-        }
-
-        // Shuffle positions to randomize starting points
-        shuffleArray(positions);
-
-
-        // Try to create 4 unique trios from random positions
-        for (let i = 0; i < positions.length && usedPositions.size < 12; i++) {
-            const [row, col] = positions[i];
-            if (!grid[row][col]) {
-                if (placeTrio(grid, row, col, rows, cols, usedPositions)) {
-                    usedPositions.add(`${row},${col}`);
-                }
-            }
-        }
-
-        if (usedPositions.size === 12 && isValidSetup(grid, usedPositions)) {
-            return grid;
-        }
-        attempts++;
-
-        /*        // Attempt to create 4 unique trios
-               let triosCreated = 0;
-               for (let row = 0; row < rows; row++) {
-                   for (let col = 0; col < cols; col++) {
-                       if (!grid[row][col] && triosCreated < 4) {
-                           let adjacents = getAdjacentPositions(row, col, rows, cols, usedPositions);
-                           if (adjacents.length >= 2) {
-                               shuffleArray(adjacents);
-                               const redPos = adjacents.pop();
-                               const yellowPos = adjacents.pop();
-                               grid[row][col] = 'blue';
-                               grid[redPos[0]][redPos[1]] = 'red';
-                               grid[yellowPos[0]][yellowPos[1]] = 'yellow';
-                               // Mark these positions as used
-                               usedPositions.add(`${row},${col}`);
-                               usedPositions.add(`${redPos[0]},${redPos[1]}`);
-                               usedPositions.add(`${yellowPos[0]},${yellowPos[1]}`);
-                               triosCreated++;
-                           }
-                       }
-                   }
-               }
-       
-               if (triosCreated === 4 && isValidSetup(grid)) {
-                   return grid;
-               } */
-
-        //attempts++;
-    }
-
-    throw new Error("Failed to generate a valid grid within the attempt limit.");
-}
-
-function isValidSetup(grid) {
-    const rows = grid.length;
-    const cols = grid[0][0].length;
-    let adjacencyMap = new Map();
-
+    let coordsMap = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    let newGrid = Array.from({ length: rows }, () => new Array(cols).fill(null));
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-            if (grid[row][col] === 'blue') {
-                let adjacents = getAdjacentPositions(row, col, rows, cols, new Set());
-                let redFound = false;
-                let yellowFound = false;
-
-                adjacents.forEach(([adjRow, adjCol]) => {
-                    const color = grid[adjRow][adjCol];
-                    if (color === 'red' && !redFound) {
-                        if (adjacencyMap.has(`${adjRow},${adjCol}`)) return false;
-                        adjacencyMap.set(`${adjRow},${adjCol}`, 'red');
-                        redFound = true;
-                    } else if (color === 'yellow' && !yellowFound) {
-                        if (adjacencyMap.has(`${adjRow},${adjCol}`)) return false;
-                        adjacencyMap.set(`${adjRow},${adjCol}`, 'yellow');
-                        yellowFound = true;
-                    }
-                });
-
-                if (!redFound || !yellowFound) return false;
-            }
+            newGrid[row][col] = someMap.grid[row][cols - col - 1];
+            coordsMap[row][col] = [row, cols - col - 1];
         }
     }
 
-    return true;
+    for (let i = 0; i < someMap.solution.length; ++i) {
+        for (let j = 0; j < 2; ++j) {
+            someMap.solution[i][j] = coordsMap[someMap.solution[i][j][0]][someMap.solution[i][j][1]];
+        }
+    }
+
+    return { "grid": newGrid, "solution": someMap.solution };
 }
 
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+function flipHoriz(someMap) {
+    const rows = 3;
+    const cols = 4;
+    let coordsMap = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    let newGrid = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            newGrid[row][col] = someMap.grid[rows - row - 1][col];
+            coordsMap[row][col] = [rows - row - 1, col];
+        }
     }
+
+    for (let i = 0; i < someMap.solution.length; ++i) {
+        for (let j = 0; j < 2; ++j) {
+            someMap.solution[i][j] = coordsMap[someMap.solution[i][j][0]][someMap.solution[i][j][1]];
+        }
+    }
+
+    return { "grid": newGrid, "solution": someMap.solution };
+}
+
+export function generateValidGrid() {
+    let sol = getRandomPattern();
+    if (getRandomInt(0, 1) == 1) {
+        sol = flipHoriz(sol);
+    }
+    if (getRandomInt(0, 1) == 1) {
+        sol = flipVert(sol);
+    }
+
+    console.log(sol.solution);
+    return sol.grid;
 }
