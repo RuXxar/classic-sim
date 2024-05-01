@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('.solve').addEventListener("click", (event) => {
-        displaySolution(gridAndSolution.solution, gameBoard, solvingState);
+        displaySolution(gridAndSolution, gameBoard, solvingState);
         gameBoard.classList.add('rotated180');
 
         if (timer) {

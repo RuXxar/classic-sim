@@ -64,17 +64,17 @@ function flipNumber(num) {
     }
 }
 
-export function displaySolution(solution, gameBoard, solvingState) {
+export function displaySolution(gridAndSolution, gameBoard, solvingState, grid) {
     console.log('the gameboard is', gameBoard)
-    console.log('the solution is', solution);
+    console.log('the solution is', gridAndSolution);
     console.log('the solving state', solvingState);
 
     const marker = solvingState.randomMarkerInt;
     const debuff = solvingState.randomDebuffInt;
 
-    for (let i = 0; i < solution.length; i++) {
-        const line1Class = getCardinalFromCoords(solution[i][0]);
-        const line2Class = getCardinalFromCoords(solution[i][1]);
+    for (let i = 0; i < gridAndSolution.solution.length; i++) {
+        const line1Class = getCardinalFromCoords(gridAndSolution.solution[i][0]);
+        const line2Class = getCardinalFromCoords(gridAndSolution.solution[i][1]);
 
         const line1 = document.createElement('div');
         const line2 = document.createElement('div');
@@ -83,19 +83,30 @@ export function displaySolution(solution, gameBoard, solvingState) {
 
         // Add correct line color
         if (i === flipNumber(marker)) {
-            line1.classList.add('correct-line');
-            line2.classList.add('correct-line');
-            // console.log('solu', solution[i][0])
-            // console.log('child', gameBoard.children[i].children) */
-            /*             //if alpha
-                        if (debuff === 0 && gameBoard.children[i].children[solution[i][0]].classList.hasClass('red')) {
-                            line1.classList.add('correct-line');
-                        } else {
-                            line2.classList.add('correct-line');
-                        } */
+            const gridCol1 = gridAndSolution.solution[i][0][1][0];
+            const gridRow1 = gridAndSolution.solution[i][0][1][1];
+            const line1Color = gridAndSolution.grid[gridCol1][gridRow1];
+
+            const gridCol2 = gridAndSolution.solution[i][0][1][0];
+            const gridRow2 = gridAndSolution.solution[i][1][1][1];
+            const line2Color = gridAndSolution.grid[gridCol2][gridRow2];
+
+            if (debuff === 0) {
+                if (line1Color === 'red') {
+                    line1.classList.add('correct-line');
+                } else {
+                    line2.classList.add('correct-line');
+                }
+            } else if (debuff === 1) {
+                if (line1Color === 'yellow') {
+                    line1.classList.add('correct-line');
+                } else {
+                    line2.classList.add('correct-line');
+                }
+            }
         }
 
-        const bluePosition = solution[i][0][0][1];
+        const bluePosition = gridAndSolution.solution[i][0][0][1];
 
         gameBoard.children[i].children[bluePosition].appendChild(line1);
         gameBoard.children[i].children[bluePosition].appendChild(line2);
