@@ -217,14 +217,19 @@ function flipHoriz(someMap) {
         }
     }
 
-    return { "grid": newGrid, "solution": someMap.solution };
+    let newSolution = []
+    for (let i = 0; i < someMap.solution.length; ++i) {
+        newSolution.push(someMap.solution[someMap.solution.length - i - 1]);
+    }
+
+    return { "grid": newGrid, "solution": newSolution };
 }
 
 export function generateGridAndSolution() {
     let gridAndSolution = getRandomPattern();
-    //if (getRandomInt(0, 1) == 1) {
-    //gridAndSolution = flipHoriz(gridAndSolution);
-    //}
+    if (getRandomInt(0, 1) == 1) {
+        gridAndSolution = flipHoriz(gridAndSolution);
+    }
     if (getRandomInt(0, 1) == 1) {
         gridAndSolution = flipVert(gridAndSolution);
     }
