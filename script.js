@@ -1,35 +1,38 @@
-import { generateValidGrid } from "./grid.js";
-
-function displayGrid(grid) {
-    if (!grid) {
-        gameBoard.innerHTML = "<p>No valid configuration found within the attempt limit.</p>";
-        return;
-    }
-
-    gameBoard.innerHTML = '';  // Clear previous content
-    grid.forEach(row => {
-        let rowDiv = document.createElement('div');
-        rowDiv.className = 'row';
-        row.forEach(cell => {
-            let cellDiv = document.createElement('div');
-            cellDiv.className = `shape ${cell}`;
-            rowDiv.appendChild(cellDiv);
-        });
-        gameBoard.appendChild(rowDiv);
-    });
-}
+import { generateGridAndSolution } from "./grid.js";
+import { generateSolvingState, displayGrid, displaySolution } from "./visual.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     const gameBoard = document.getElementById('gameBoard');
-    const validGrid = generateValidGrid();
-    displayGrid(validGrid);
+    let gridAndSolution = generateGridAndSolution();
+    let solvingState = generateSolvingState();
+    displayGrid(gridAndSolution.grid, gameBoard);
+    let timer = solvingState.timer;
 
     document.querySelector('.rotate-button').addEventListener("click", (event) => {
-        gameBoard.classList.toggle('rotated180');
+        if (!gameBoard.classList.contains('rotated180')) {
+            gameBoard.classList.add('rotated180');
+        } else {
+            gameBoard.classList.remove('rotated180');
+        }
     });
 
     document.querySelector('.new-pattern').addEventListener("click", (event) => {
-        const validGrid = generateValidGrid();
-        displayGrid(validGrid);
+        if (timer) {
+            clearInterval(timer)
+        }
+        gridAndSolution = generateGridAndSolution();
+        solvingState = generateSolvingState();
+        displayGrid(gridAndSolution.grid, gameBoard);
+        timer = solvingState.timer;
+        gameBoard.classList.remove('rotated180');
+    });
+
+    document.querySelector('.solve').addEventListener("click", (event) => {
+        displaySolution(gridAndSolution.solution, gameBoard, solvingState);
+        gameBoard.classList.add('rotated180');
+
+        if (timer) {
+            clearInterval(timer);
+        }
     });
 });

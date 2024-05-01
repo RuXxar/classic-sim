@@ -9,22 +9,28 @@ body {
     flex-direction: column;
 }
 
+img {
+    height: 60px;
+}
+
 .game-board {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    transition: transform 2s;
+    transition: transform 1s;
 }
 
-.row {
+.column {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     margin-bottom: 10px;
 }
 
 .shape {
+    position: relative;
     width: 60px;
     height: 60px;
     display: flex;
@@ -40,12 +46,12 @@ body {
 
 .blue {
     background-color: blue;
-    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    /*clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);*/
 }
 
 .red {
     background-color: red;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    /*clip-path: polygon(50% 0%, 0% 100%, 100% 100%);*/
     width: 60px;
     height: 60px;
     display: flex;
@@ -61,6 +67,42 @@ body {
 
 .rotated180 {
     transform: rotate(180deg);
+}
+
+.line {
+    position: absolute;
+    border-top: 10px solid purple;
+    width: 100%;
+    z-index: 99;
+}
+
+.correct-line {
+    border-color: lightgreen;
+}
+
+.line:hover {
+    border-color: lightpink;
+    cursor: pointer;
+}
+
+
+
+.rotate-0 {
+    left: 50%
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+    bottom: 0;
+}
+
+.rotate-180 {
+    right: 50%;
+}
+
+.rotate-270 {
+    transform: rotate(-90deg);
+    top: 0;
 }
 
 /* Additional CSS to rotate or adjust lines based on link data attributes might be needed */
